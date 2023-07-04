@@ -8,14 +8,14 @@
     <link rel="stylesheet" type="text/css" href="{{asset('inner/css/fontawesome-all.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('inner/css/iofrm-style.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('inner/css/iofrm-theme16.css')}}">
-    <link href="{{ asset('inner/images/favicon.png') }}" rel="icon">
+    <link href="{{ asset('favicon.png') }}" rel="icon">
 </head>
 <body>
     <div class="form-body without-side">
         <div class="website-logo">
             <a href="/">
                 <div class="logo">
-                    <img class="logo-size" src="{{ asset("inner/img/verified-logo.png") }}" alt="">
+                    <img class="logo-size" src="{{ asset("inner/img/main-logo.png") }}" alt="">
                 </div>
             </a>
         </div>
