@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NavigationController;
+use App\Http\Controllers\VerifyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,4 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', []);
+Route::get('/', [NavigationController::class, 'home_link_function']);
+
+Route::get('/verify', [VerifyController::class, 'verify_page_function']);
