@@ -20,12 +20,12 @@
                   </p>
                 </div>
                 <div class="home-6_hero-button-block">
-                  <a href="quote.html" class="btn-masco btn-fill--up">
+                  <a href="/verify" class="btn-masco btn-fill--up">
                     <span>Get Started</span>
                   </a>
-                  <a href="https://youtu.be/JTxAN_D2yNM" data-fancybox class="btn-masco btn-outline btn-padding-x-33">
+                  {{-- <a href="https://youtu.be/JTxAN_D2yNM" data-fancybox class="btn-masco btn-outline btn-padding-x-33">
                     <div class="play-icon"></div> See How It Works
-                  </a>
+                  </a> --}}
                 </div>
               </div>
             </div>

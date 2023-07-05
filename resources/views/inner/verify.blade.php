@@ -5,27 +5,27 @@
         <div class="img-holder">
             <div class="bg"></div>
             <div class="info-holder">
-                <img src="images/graphic3.svg" alt="">
+                <img src="{{asset('inner/images/graphic3.svg')}}" alt="">
             </div>
         </div>
         <div class="form-holder">
-            <div class="form-content">
+            <div class="form-content" style="background: #000;">
                 <div class="form-items">
-                    <h3>Login to account</h3>
-                    <p>Access to the most powerfull tool in the entire design and web industry.</p>
+                    <h3 style="text-align: center;">Express verification</h3>
+                    <p style="text-align: center;">Type the email address you which to verify</p>
                     <form>
-                        <input class="form-control" type="text" name="username" placeholder="E-mail Address" required>
-                        <input class="form-control" type="password" name="password" placeholder="Password" required>
+                        <input class="form-control" type="text" name="email" placeholder="E-mail Address" required>
                         <div class="form-button">
-                            <button id="submit" type="submit" class="ibtn">Login</button> <a href="forget16.html">Forget password?</a>
+                            <center>
+                                <button id="submit" type="submit" class="ibtn">Verify!</button>
+                            </center>
                         </div>
                     </form>
-                    <div class="other-links">
-                        <div class="text">Or login with</div>
-                        <a href="#"><i class="fab fa-facebook-f"></i>Facebook</a><a href="#"><i class="fab fa-google"></i>Google</a><a href="#"><i class="fab fa-linkedin-in"></i>Linkedin</a>
-                    </div>
                     <div class="page-links">
-                        <a href="register16.html">Register new account</a>
+                        <center>
+                            <br>
+                            <a href="/"> < back </a>
+                        </center>
                     </div>
                 </div>
             </div>
