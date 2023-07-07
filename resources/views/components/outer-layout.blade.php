@@ -180,7 +180,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="cta-home-6 padding-bottom-100">
       <div class="container">
         <div class="cta-home-6-wrapper">
@@ -205,6 +205,8 @@
         </div>
       </div>
     </div>
+
+    
     <footer class="footer-v3   footer-padding-default footer--dark-v1">
       <div class="container">
         <div class="row row--footer-main">
