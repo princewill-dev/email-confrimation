@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NavigationController;
-use App\Http\Controllers\VerifyController;
+use App\Http\Controllers\CodeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,11 +15,13 @@ use App\Http\Controllers\VerifyController;
 |
 */
 
-Route::get('/', [NavigationController::class, 'home_link_function']);
+Route::get('/', [NavigationController::class, 'home_link_function'])->name("homepage");
 
-Route::get('/verify', [VerifyController::class, 'verify_page_function']);
+Route::get('/verify', [CodeController::class, 'verify_page_function'])->name("verify_age");
 
-Route::get('/verifyportal', [VerifyController::class, 'verify_email_function'])->name("verify_portal");
+Route::post('/verifyportal', [CodeController::class, 'verify_email_function'])->name("verify_portal");
+
+Route::get('/confirm', [CodeController::class, 'confirm_otp_function'])->name("confirm_otp_page");
 
 
 

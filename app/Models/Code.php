@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Verify extends Model
+class Code extends Model
 {
     use HasFactory;
 
@@ -17,6 +17,4 @@ class Verify extends Model
         'attempts',
         'time_when_verified',
     ];
-
-
 }

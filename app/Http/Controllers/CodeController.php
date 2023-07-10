@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Verify;
+use App\Models\Code;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
-class VerifyController extends Controller
+class CodeController extends Controller
 {
 
     public function verify_page_function()
@@ -21,7 +21,7 @@ class VerifyController extends Controller
 
         function check_id_uniqueness($activity_id)
         {
-            $activity_id_check = Verify::where('activity_id', $activity_id)->first();
+            $activity_id_check = Code::where('activity_id', $activity_id)->first();
             return $activity_id_check !== null;
         }
         
@@ -39,7 +39,7 @@ class VerifyController extends Controller
 
         function check_otp_uniqueness($otp_code)
         {
-            $otp_check = Verify::where('otp_code', $otp_code)->first();
+            $otp_check = Code::where('otp_code', $otp_code)->first();
             return $otp_check !== null;
         }
 
@@ -58,13 +58,19 @@ class VerifyController extends Controller
             'email' => 'required|email',
         ]);
 
-        $send_otp = new Verify;
+        $send_otp = new Code;
         $send_otp->email = $validate_email['email'];
         $send_otp->activity_id = $this->generate_activity_id();
         $send_otp->otp_code = $this->generate_otp_code();
 
         return redirect("confirm")->with('success', 'OTP sent');
 
+    }
+
+
+    public function confirm_otp_function()
+    {
+        return view('inner.confirm');
     }
 
     

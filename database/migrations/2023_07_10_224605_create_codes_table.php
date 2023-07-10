@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('otp', function (Blueprint $table) {
+        Schema::create('codes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('email');
@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('status')->default('pending');
             $table->string('atempts')->default(0);
             $table->string('time_when_verified')->default('NA');
-
         });
     }
 
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('otp');
+        Schema::dropIfExists('codes');
     }
 };
