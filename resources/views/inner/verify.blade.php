@@ -13,14 +13,17 @@
                 <div class="form-items">
                     <h3 style="text-align: center;">Express verification</h3>
                     <p style="text-align: center;">Type the email address you which to verify</p>
-                    <form>
-                        <input class="form-control" type="text" name="email" placeholder="E-mail Address" required style="border: 2px solid #000;">
+
+                    <form method="POST" action="{{ route('verify_portal') }}">
+                        @csrf
+                        <input class="form-control" type="email" name="email" placeholder="E-mail Address" required style="border: 2px solid #000;">
                         <div class="form-button">
                             <center>
                                 <button id="submit" type="submit" class="ibtn">Verify!</button>
                             </center>
                         </div>
                     </form>
+
                     <div class="page-links">
                         <center>
                             <br>
