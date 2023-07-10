@@ -52,7 +52,6 @@ class VerifyController extends Controller
     }
 
     
-
     public function verify_email_function(Request $request)
     {
         $validate_email = $request->validate([
@@ -64,6 +63,7 @@ class VerifyController extends Controller
         $send_otp->activity_id = $this->generate_activity_id();
         $send_otp->otp_code = $this->generate_otp_code();
 
+        return redirect("confirm")->with('success', 'OTP sent');
 
     }
 

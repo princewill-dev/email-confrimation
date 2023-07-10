@@ -13,6 +13,9 @@ class Verify extends Model
         'activity_id',
         'email',
         'otp_code',
+        'status',
+        'attempts',
+        'time_when_verified',
     ];
 
 
