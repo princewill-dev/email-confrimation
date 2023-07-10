@@ -35,7 +35,9 @@ class CodeController extends Controller
     
     public function generate_otp_code($length = 5)
     {
-        $otp_code = Str::random($length);
+        // $otp_code = Str::random($length);
+
+        $otp_code = sprintf('%06d', mt_rand(0, 999999));
 
         function check_otp_uniqueness($otp_code)
         {
@@ -58,10 +60,14 @@ class CodeController extends Controller
             'email' => 'required|email',
         ]);
 
+        $activity_id = Str::random(20);
+
         $send_otp = new Code;
         $send_otp->email = $validate_email['email'];
-        $send_otp->activity_id = $this->generate_activity_id();
+        $send_otp->activity_id = $activity_id;
+        // $send_otp->otp_code = strtoupper($this->generate_otp_code());
         $send_otp->otp_code = $this->generate_otp_code();
+        $send_otp->save();
 
         return redirect("confirm")->with('success', 'OTP sent');
 
