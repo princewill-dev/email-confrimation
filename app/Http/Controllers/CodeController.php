@@ -9,14 +9,13 @@ use Illuminate\Http\Request;
 class CodeController extends Controller
 {
 
-    public function verify_page_function()
-    {
+    public function verify_page_function() {
         return view('inner.verify');
     }
 
 
-    function generate_activity_id($length = 10)
-    {
+    function generate_activity_id($length = 30) {
+
         $activity_id = Str::random($length);
 
         function check_id_uniqueness($activity_id)
@@ -33,8 +32,8 @@ class CodeController extends Controller
     }
 
     
-    public function generate_otp_code($length = 5)
-    {
+    public function generate_otp_code($length = 5) {
+
         // $otp_code = Str::random($length);
 
         $otp_code = sprintf('%06d', mt_rand(0, 999999));
@@ -54,29 +53,42 @@ class CodeController extends Controller
     }
 
     
-    public function verify_email_function(Request $request)
-    {
+    public function verify_email_function(Request $request) {
+
         $validate_email = $request->validate([
             'email' => 'required|email',
         ]);
 
-        $activity_id = Str::random(20);
+        $activity_id = $this->generate_activity_id();
 
         $send_otp = new Code;
         $send_otp->email = $validate_email['email'];
         $send_otp->activity_id = $activity_id;
-        // $send_otp->otp_code = strtoupper($this->generate_otp_code());
         $send_otp->otp_code = $this->generate_otp_code();
         $send_otp->save();
 
-        return redirect("confirm")->with('success', 'OTP sent');
+        return redirect("confirm/$activity_id")->with('success', 'OTP sent');
 
     }
 
 
-    public function confirm_otp_function()
-    {
-        return view('inner.confirm');
+    public function confirm_otp_function($activity_id) {
+
+        $verify_url = Code::where('activity_id', $activity_id)->exists();
+
+        if($verify_url){
+
+            return view("inner.confirm");
+
+        } 
+
+        return redirect('/')->with('error', 'invalid token');
+
+    }
+
+    public function confirm_email_function(Request $request, Code $activity_id) {
+
+        $submitted_otp = $request->input('code');
     }
 
     

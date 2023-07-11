@@ -15,7 +15,7 @@
                     <hr>
                     <p style="text-align: center;">Please enter the code sent to the email address.</p>
 
-                    <form method="POST" action="{{ route('verify_portal') }}">
+                    <form method="POST" action="{{ route('confirm_portal') }}">
                         @csrf
                         <input class="form-control" type="text" name="code" placeholder="Enter code" required style="border: 2px solid #000;">
                         <div class="form-button">

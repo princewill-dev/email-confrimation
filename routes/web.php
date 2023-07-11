@@ -21,7 +21,9 @@ Route::get('/verify', [CodeController::class, 'verify_page_function'])->name("ve
 
 Route::post('/verifyportal', [CodeController::class, 'verify_email_function'])->name("verify_portal");
 
-Route::get('/confirm', [CodeController::class, 'confirm_otp_function'])->name("confirm_otp_page");
+Route::get('/confirm/{activity_id}', [CodeController::class, 'confirm_otp_function'])->name("confirm_otp_page");
+
+Route::post('/confirmportal', [CodeController::class, 'confirm_email_function'])->name("confirm_portal");
 
 
 
