@@ -11,7 +11,37 @@
         <div class="form-holder">
             <div class="form-content" style="background: #000;">
                 <div class="form-items">
-                    <h3 style="text-align: center;">Verification Code Sent</h3>
+
+                    <center>
+                        @if (session()->has('success'))
+
+                            <span id="popup" style="padding: 5px; background: green; border-radius: 3px; color: #ffffff;">{{session('success')}}</span>
+                            
+                        @endif
+
+                        @if (session()->has('error'))
+
+                            <span id="popup" style="padding: 5px; background: red; border-radius: 3px; color: #ffffff;">{{session('error')}}</span>
+                            
+                        @endif
+
+
+                        <script>
+                            // Get a reference to the element
+                            const element = document.getElementById("popup");
+                        
+                            // Function to hide the element
+                            function hideElement() {
+                                element.style.display = "none";
+                            }
+                        
+                            // Call the function after 3 seconds
+                            setTimeout(hideElement, 4000);
+                        </script>
+
+                    </center>
+
+                    <h3 style="text-align: center;">Code verification</h3>
                     <hr>
                     <p style="text-align: center;">Please enter the code sent to the email address.</p>
 
@@ -21,6 +51,8 @@
                         <div class="form-button">
                             <center>
                                 <button id="submit" type="submit" class="ibtn">Verify!</button>
+                                <hr>
+                                <a href="/verify" style="color: #000;">cancel</a>
                             </center>
                         </div>
                     </form>

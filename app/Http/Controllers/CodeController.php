@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Code;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class CodeController extends Controller
 {
@@ -67,22 +68,33 @@ class CodeController extends Controller
         $send_otp->otp_code = $this->generate_otp_code();
         $send_otp->save();
 
-        return redirect("confirm/$activity_id")->with('success', 'OTP sent');
+        return redirect("confirm/$activity_id")->with('success', 'Code sent, please check your email');
 
     }
 
 
     public function confirm_otp_function($activity_id) {
 
-        $verify_url = Code::where('activity_id', $activity_id)->exists();
+        $verify_url = Code::where('activity_id', $activity_id)->first();
+
 
         if($verify_url){
 
-            return view("inner.confirm");
+            $createdAt = $verify_url->created_at;
+            $currentTime = Carbon::now();
+            $isWithinTenMinutes = $createdAt->diffInMinutes($currentTime) <= 10;
 
-        } 
+            if($isWithinTenMinutes) {
+                return view("inner.confirm");
+            } else {
+                return redirect("/verify")->with('error', 'time limit exceeded, please try again');
+            }
 
-        return redirect('/')->with('error', 'invalid token');
+        } else {
+            // return redirect('/verify')->with('error', 'session expired, please try again');
+            return redirect('/confirm')->with('error', 'session expired, please try again');
+
+        }
 
     }
 

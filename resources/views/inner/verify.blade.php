@@ -11,6 +11,36 @@
         <div class="form-holder">
             <div class="form-content" style="background: #000;">
                 <div class="form-items">
+
+                    <center>
+                        @if (session()->has('success'))
+
+                            <span id="popup" style="padding: 5px; background: green; border-radius: 3px; color: #ffffff;">{{session('success')}}</span>
+                            
+                        @endif
+
+                        @if (session()->has('error'))
+
+                            <span id="popup" style="padding: 5px; background: red; border-radius: 3px; color: #ffffff;">{{session('error')}}</span>
+                            
+                        @endif
+
+
+                        <script>
+                            // Get a reference to the element
+                            const element = document.getElementById("popup");
+                        
+                            // Function to hide the element
+                            function hideElement() {
+                                element.style.display = "none";
+                            }
+                        
+                            // Call the function after 3 seconds
+                            setTimeout(hideElement, 4000);
+                        </script>
+
+                    </center>
+
                     <h3 style="text-align: center;">Express verification</h3>
                     <p style="text-align: center;">Type the email address you which to verify</p>
 
