@@ -10,95 +10,68 @@ use Carbon\Carbon;
 class CodeController extends Controller
 {
 
-    public function verify_page_function() {
+    public function showForm() {
         return view('inner.verify');
     }
 
 
-    function generate_activity_id($length = 30) {  //re-useable function for generating activity ID
+    public function createOtp(Request $request) {
 
-        $activity_id = Str::random($length);
+        $email = $request->input('email');
 
-        function check_id_uniqueness($activity_id)
-        {
-            $activity_id_check = Code::where('activity_id', $activity_id)->first();
-            return $activity_id_check !== null;
-        }
-        
-        while (check_id_uniqueness($activity_id)) {
-            $activity_id = Str::random($length);
-        }
-        
-        return $activity_id;
-    }
+        $checkEmail = Code::where('email', $email)->first();
 
-    
-    public function generate_otp_code($length = 5) {  //re-useable function for generating One-Time_code
+        if ($checkEmail) {
 
-        $otp_code = sprintf('%06d', mt_rand(0, 999999));
+            $status = $checkEmail->status;
+            $activityId = $checkEmail->activity_id;
+            $createdAt = $checkEmail->created_at;
+            $otpCode = $checkEmail->otp_code;
+            $currentTime = Carbon::now();
+            $isWithinTenMinutes = $createdAt->diffInMinutes($currentTime) <= 30;
 
-        function check_otp_uniqueness($otp_code)
-        {
-            $otp_check = Code::where('otp_code', $otp_code)->first();
-            return $otp_check !== null;
-        }
+            if($status == 'verified') {
 
-        while (check_otp_uniqueness($otp_code))
-        {
-            $otp_code = Str::random($length);
-        }
-        
-        return $otp_code;
-    }
+                return back()->with('success', 'The email you entered is already verified');
 
-    
-    // public function verify_email_function(Request $request) {
+            } else {
 
-    //     $check_email_status = Code::where('status', $request->input('email'))->first();
+                if(!$isWithinTenMinutes) {
 
-    //     if($check_email_status == 'verified') {
-    //         return redirect("/verify")->with('success', 'the email you entered is already verified');
-    //     } else {
+                    $createNewOtp = mt_rand(100000, 999999);
 
-    //         $validate_email = $request->validate([
-    //             'email' => 'required|email',
-    //         ]);
-    
-    //         $activity_id = $this->generate_activity_id();
-    
-    //         $send_otp = new Code;
-    //         $send_otp->email = $validate_email['email'];
-    //         $send_otp->activity_id = $activity_id;
-    //         $send_otp->otp_code = $this->generate_otp_code();
-    //         $send_otp->save();
-    
-    //         return redirect("confirm/$activity_id")->with('success', 'Code sent, please check your email');
+                    $checkEmail->update([
+                        'otp_code' => $createNewOtp
+                    ]);
 
-    //     }
+                    $checkEmail->updateTimestamps();
 
-    // }
+                    // send email
 
+                    return redirect("/otp_sent/activityId=$activityId")->with('success', 'timed out, a new code has been sent to your email');
 
-    public function verify_email_function(Request $request) {
+                } else {
 
-        $check_email_status = Code::where('email', $request->input('email'))->first();
+                    return redirect("/otp_sent/activityId=$activityId")->with('success', 'please enter the code sent to your email');
 
-        if ($check_email_status && $check_email_status->status == 'verified') {
-            return redirect("/verify")->with('success', 'The email you entered is already verified');
+                }
+
+            }
+
         } else {
-            $validate_email = $request->validate([
-                'email' => 'required|email',
-            ]);
 
-            $activity_id = $this->generate_activity_id();
-            $send_otp = new Code;
-            $send_otp->email = $validate_email['email'];
-            $send_otp->activity_id = $activity_id;
-            $send_otp->otp_code = $this->generate_otp_code();
-            $send_otp->save();
+            $activityId = Str::random(30);
 
-            return redirect("confirm/$activity_id")->with('success', 'Code sent, please check your email');
+            $saveItems = new Code;
+            $saveItems->email = $email;
+            $saveItems->activity_id = $activityId;
+            $saveItems->otp_code = mt_rand(100000, 999999);
+            $saveItems->save();
+
+            return redirect("otp_sent/activityId=$activityId")->with('success', 'verification code sent, please check your email');;
+
         }
+        
     }
 
 
@@ -111,60 +84,126 @@ class CodeController extends Controller
     }
 
 
-    public function confirm_otp_function($activity_id) {
+    public function displayOtp($activityId) {
 
-        $verify_url = Code::where('activity_id', $activity_id)->first();
+        //return view('inner.confirm', compact('activityId'));
 
-        if($verify_url){
+        $verify_url = Code::where('activity_id', $activityId)->first();
 
-            $createdAt = $verify_url->created_at;
-            $isWithinTenMinutes = $this->checkTimeWithinTenMinutes($createdAt);
+        
 
-            $check_verification_status = $verify_url->status;
+        if($verify_url) {
 
-            if($check_verification_status == 'verified') {
+            $checkVerify = $verify_url->status;
 
-                return redirect("/verify")->with('success', 'email already verified');
+            if($checkVerify == 'verified') {
+
+                return redirect("/verify")->with('error', 'email already verified');
 
             } else {
 
+                $createdAt = $verify_url->updated_at;
+                $isWithinTenMinutes = $this->checkTimeWithinTenMinutes($createdAt);
+
                 if($isWithinTenMinutes) {
-                    return view("inner.confirm");
+
+                    return view('inner.confirm', compact('activityId'));
+
                 } else {
-                    return redirect("/verify")->with('error', 'time limit exceeded, please try again');
+
+                    $createNewOtp = mt_rand(100000, 999999);
+
+                    $verify_url->update([
+                        'otp_code' => $createNewOtp
+                    ]);
+
+                    $verify_url->updateTimestamps();
+
+                    return view('inner.confirm', compact('activityId'));
+
                 }
 
             }
 
         } else {
-
-            return redirect('/confirm')->with('error', 'session expired, please try again');
-
+            return redirect("/verify")->with('error', 'invalid link');
         }
 
     }
 
-    public function confirm_email_function(Request $request) {
+    public function checkOtp(Request $request) {
 
-        $submited_otp_code = $request->input('code');
+        $getOtpData = $request->validate([
+            'code' => 'required|min:6|max:6',
+        ]);
 
-        $check_existence = Code::where('otp_code', $submited_otp_code)->first();
+        $activityId = $request->input('activityId');
+
+        // dump($activityId);
+
+        $check_existence = Code::where('otp_code', $getOtpData)->first();
 
         if($check_existence) {
 
-            $get_activity_id = $check_existence->activity_id;
-
-            Code::where('activity_id', $get_activity_id)->update(['status' => 'verified']);
+            Code::where('activity_id', $activityId)->update([
+                'status' => 'verified',
+            ]);
 
             return view('inner.success')->with('success', 'email verified');
 
         } else {
+
+            $attemptCounter = $check_existence->atempts + 1;
+
+            Code::where('activity_id', $activityId)->update([
+                'atempts' => $attemptCounter
+            ]);
 
             return back()->with('error', 'incorrect code, please try again');
         }
 
 
     }
+
+    // public function confirm_email_function(Request $request)
+    // {
+    //     $submitted_otp_code = $request->input('code');
+
+    //     $check_existence = Code::where('otp_code', $submitted_otp_code)->first();
+
+    //     if ($check_existence) {
+    //         $activity_id = $check_existence->activity_id;
+
+    //         Code::where('activity_id', $activity_id)
+    //             ->update(['status' => 'verified']);
+
+    //         return view('inner.success')->with('success', 'Email verified');
+    //     } else {
+    //         return back()->with('error', 'Incorrect code, please try again');
+    //     }
+    // }
+
+    public function confirm_email_function(Request $request)
+    {
+        $submitted_otp_code = $request->input('code');
+
+        $activity_id = $request->route('activity_id');
+
+        $check_existence = Code::where('otp_code', $submitted_otp_code)
+                                ->where('activity_id', $activity_id)
+                                ->first();
+
+        if ($check_existence) {
+            $check_existence->status = 'verified';
+            $check_existence->save();
+
+            return view('inner.success')->with('success', 'Email verified');
+        } else {
+            return back()->with('error', 'Incorrect code, please try again');
+        }
+    }
+
+
 
 
     

@@ -15,15 +15,21 @@ use App\Http\Controllers\CodeController;
 |
 */
 
-Route::get('/', [NavigationController::class, 'home_link_function'])->name("homepage");
 
-Route::get('/verify', [CodeController::class, 'verify_page_function'])->name("verify_age");
 
-Route::post('/verifyportal', [CodeController::class, 'verify_email_function'])->name("verify_portal");
 
-Route::get('/confirm/{activity_id}', [CodeController::class, 'confirm_otp_function'])->name("confirm_otp_page");
 
-Route::post('/confirmportal', [CodeController::class, 'confirm_email_function'])->name("confirm_portal");
+Route::get('/', [NavigationController::class, 'home'])->name("homepage");
+
+Route::get('/verify', [CodeController::class, 'showForm'])->name("activity.show");
+
+Route::post('/create', [CodeController::class, 'createOtp'])->name("activity.try");
+
+Route::get('/otp_sent/activityId={activityId}', [CodeController::class, 'displayOtp'])->name("activity.get");
+
+Route::post('/recieve_otp', [CodeController::class, 'checkOtp'])->name("activity.submit");
+
+// Route::post('/confirmportal', [CodeController::class, 'confirm_email_function'])->name("confirm_portal");
 
 
 

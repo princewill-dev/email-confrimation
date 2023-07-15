@@ -44,7 +44,7 @@
                     <h3 style="text-align: center;">Express verification</h3>
                     <p style="text-align: center;">Type the email address you which to verify</p>
 
-                    <form method="POST" action="{{ route('verify_portal') }}">
+                    <form method="POST" action="{{ route('activity.try') }}">
                         @csrf
                         <input class="form-control" type="email" name="email" placeholder="E-mail Address" required style="border: 2px solid #000;">
                         <div class="form-button">

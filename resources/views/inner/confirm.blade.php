@@ -43,9 +43,9 @@
 
                     <h3 style="text-align: center;">Code verification</h3>
                     <hr>
-                    <p style="text-align: center;">Please enter the code sent to the email address.</p>
+                    <p style="text-align: center;">Please enter the code sent to the email address. {{$activityId}}</p>
 
-                    <form method="POST" action="{{ route('confirm_portal') }}">
+                    <form method="POST" action="{{route('activity.submit', $activityId)}}">
                         @csrf
                         <input class="form-control" type="text" name="code" placeholder="Enter code" required style="border: 2px solid #000;">
                         <div class="form-button">
