@@ -131,77 +131,41 @@ class CodeController extends Controller
 
     }
 
-    public function checkOtp(Request $request) {
-
-        $getOtpData = $request->validate([
-            'code' => 'required|min:6|max:6',
-        ]);
-
-        $activityId = $request->input('activityId');
-
-        // dump($activityId);
-
-        $check_existence = Code::where('otp_code', $getOtpData)->first();
-
-        if($check_existence) {
-
-            Code::where('activity_id', $activityId)->update([
-                'status' => 'verified',
-            ]);
-
-            return view('inner.success')->with('success', 'email verified');
-
-        } else {
-
-            $attemptCounter = $check_existence->atempts + 1;
-
-            Code::where('activity_id', $activityId)->update([
-                'atempts' => $attemptCounter
-            ]);
-
-            return back()->with('error', 'incorrect code, please try again');
-        }
-
-
-    }
-
-    // public function confirm_email_function(Request $request)
-    // {
-    //     $submitted_otp_code = $request->input('code');
-
-    //     $check_existence = Code::where('otp_code', $submitted_otp_code)->first();
-
-    //     if ($check_existence) {
-    //         $activity_id = $check_existence->activity_id;
-
-    //         Code::where('activity_id', $activity_id)
-    //             ->update(['status' => 'verified']);
-
-    //         return view('inner.success')->with('success', 'Email verified');
-    //     } else {
-    //         return back()->with('error', 'Incorrect code, please try again');
-    //     }
-    // }
-
-    public function confirm_email_function(Request $request)
+    public function checkOtp(Request $request)
     {
-        $submitted_otp_code = $request->input('code');
+        $validatedData = $request->validate([
+            'code' => 'required|min:6|max:6',
+            'activityId' => 'required|string',
+        ]);
+    
+        $activityId = $validatedData['activityId'];
+        $code = $validatedData['code'];
+    
+        // $existingCode = Code::where('otp_code', $code)->first();
 
-        $activity_id = $request->route('activity_id');
-
-        $check_existence = Code::where('otp_code', $submitted_otp_code)
-                                ->where('activity_id', $activity_id)
-                                ->first();
-
-        if ($check_existence) {
-            $check_existence->status = 'verified';
-            $check_existence->save();
-
-            return view('inner.success')->with('success', 'Email verified');
+        $existingCode = Code::where('otp_code', $code)
+        ->where('activity_id', $activityId)
+        ->first();
+    
+        if ($existingCode) {
+            $existingCode->update(['status' => 'verified']);
+    
+            return view('inner.success')->with('success', 'email verified');
         } else {
-            return back()->with('error', 'Incorrect code, please try again');
+            $checkActivity = Code::where('activity_id', $activityId)->first();
+    
+            if ($checkActivity) {
+                $attemptCounter = $checkActivity->attempts + 1;
+    
+                $checkActivity->update(['attempts' => $attemptCounter]);
+    
+                return back()->with('error', 'Incorrect code, please try again');
+            } else {
+                return back()->with('error', 'Invalid activity ID');
+            }
         }
     }
+    
 
 
 

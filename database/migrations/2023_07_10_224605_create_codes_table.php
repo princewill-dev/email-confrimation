@@ -18,7 +18,7 @@ return new class extends Migration
             $table->longText('activity_id');
             $table->string('otp_code');
             $table->string('status')->default('pending');
-            $table->string('atempts')->default(0);
+            $table->string('attempts')->default(0);
             $table->string('time_when_verified')->default('NA');
         });
     }
