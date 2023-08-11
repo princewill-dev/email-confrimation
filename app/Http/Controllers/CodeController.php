@@ -6,6 +6,7 @@ use App\Models\Code;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class CodeController extends Controller
 {
@@ -38,15 +39,22 @@ class CodeController extends Controller
 
                 if(!$isWithinTenMinutes) {
 
-                    $createNewOtp = mt_rand(100000, 999999);
+                    $newOtp = mt_rand(100000, 999999);
 
                     $checkEmail->update([
-                        'otp_code' => $createNewOtp
+                        'otp_code' => $newOtp,
                     ]);
 
                     $checkEmail->updateTimestamps();
 
                     // send email
+                    // Mail::raw('Hello, your otp verification code is '.$createNewOtp.' ', function ($message) use ($email) {
+                    //     $message->to($email)->subject('Greeting');
+                    // });
+                    
+                    Mail::send('emails.otp', ['newOtp' => $newOtp], function ($message) use ($email) {
+                        $message->to($email)->subject('Verification code');
+                    });
 
                     return redirect("/otp_sent/activityId=$activityId")->with('success', 'timed out, a new code has been sent to your email');
 
@@ -61,12 +69,18 @@ class CodeController extends Controller
         } else {
 
             $activityId = Str::random(30);
+            
+            $newOtp = mt_rand(100000, 999999);
 
             $saveItems = new Code;
             $saveItems->email = $email;
             $saveItems->activity_id = $activityId;
-            $saveItems->otp_code = mt_rand(100000, 999999);
+            $saveItems->otp_code = $newOtp;
             $saveItems->save();
+            
+            Mail::send('emails.otp', ['newOtp' => $newOtp], function ($message) use ($email) {
+                        $message->to($email)->subject('Verification code');
+                    });
 
             return redirect("otp_sent/activityId=$activityId")->with('success', 'verification code sent, please check your email');;
 
@@ -78,7 +92,7 @@ class CodeController extends Controller
     public function checkTimeWithinTenMinutes($timestamp) {
 
         $currentTime = Carbon::now();
-        $isWithinTenMinutes = $timestamp->diffInMinutes($currentTime) <= 30;
+        $isWithinTenMinutes = $timestamp->diffInMinutes($currentTime) <= 10;
 
         return $isWithinTenMinutes;
     }
@@ -134,7 +148,7 @@ class CodeController extends Controller
     public function checkOtp(Request $request)
     {
         $validatedData = $request->validate([
-            'code' => 'required|min:6|max:6',
+            'code' => 'required',
             'activityId' => 'required|string',
         ]);
     

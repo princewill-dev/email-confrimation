@@ -46,6 +46,10 @@
 
                     <form method="POST" action="{{ route('activity.try') }}">
                         @csrf
+                        
+                        
+                        
+                        
                         <input class="form-control" type="email" name="email" placeholder="E-mail Address" required style="border: 2px solid #000;">
                         <div class="form-button">
                             <center>
