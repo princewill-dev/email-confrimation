@@ -47,6 +47,14 @@
 
                     <form method="POST" action="{{route('activity.submit', $activityId)}}">
                         @csrf
+                        
+                        
+                        <center>
+                            @error('code')
+                                <span class="mb-0 small alert alert-danger shadow-dm">{{$message}}</span>
+                            @enderror
+                        </center>
+                        
                         <input class="form-control" type="text" name="code" placeholder="Enter code" required style="border: 2px solid #000;">
                         <input type="hidden" name="activityId" value="{{$activityId}}">
                         <div class="form-button">

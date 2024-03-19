@@ -12,11 +12,11 @@
                 <div class="home-6_hero-text-block">
                   <h1 class="heading-xl heading-xl--general-sans text-black hero-content__title">
                     <span>
-                          Start a conversation in the <span class="hero-content__title-color-bg">email world</span>
+                          Seamless email<span class="hero-content__title-color-bg">OTP verification</span>
                     </span>
                   </h1>
                   <p>
-                    Masco is a cold email software that lets you communicate B2B with ease. A key reason for this is that 80% of people prefer sales representatives to contact them via email.
+                    Secure Your Success, One Verified Email at a Time - Simplifying Email Marketing with OTP Validation!
                   </p>
                 </div>
                 <div class="home-6_hero-button-block">
