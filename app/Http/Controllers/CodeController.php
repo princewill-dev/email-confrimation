@@ -78,9 +78,9 @@ class CodeController extends Controller
             $saveItems->otp_code = $newOtp;
             $saveItems->save();
             
-            // Mail::send('emails.otp', ['newOtp' => $newOtp], function ($message) use ($email) {
-            //             $message->to($email)->subject('Verification code');
-            //         });
+            Mail::send('emails.otp', ['newOtp' => $newOtp], function ($message) use ($email) {
+                        $message->to($email)->subject('Verification code');
+                    });
 
             return redirect("otp_sent/activityId=$activityId")->with('success', 'verification code sent, please check your email');;
 
